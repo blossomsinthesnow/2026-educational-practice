@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>선생님 소개 & 퀴즈</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fredoka', 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            text-align: center;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #764ba2;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .name-display {
+            font-size: 3.5em;
+            color: #ff6b6b;
+            font-weight: 900;
+            margin: 40px 0;
+            text-shadow: 3px 3px 0px rgba(255, 107, 107, 0.3);
+            animation: bounce 0.6s ease-out;
+            letter-spacing: 2px;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .image-container {
+            margin: 30px 0;
+        }
+
+        .image-container img {
+            max-width: 300px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: popIn 0.5s ease-out;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .image-container img:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .definition {
+            font-size: 1.2em;
+            color: #333;
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+            font-weight: 500;
+        }
+
+        .hobby-text {
+            font-size: 1.3em;
+            color: #333;
+            background: #ffe5e5;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #ff6b6b;
+            font-weight: 700;
+            animation: popIn 0.5s ease-out;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 15px 10px;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .button:active {
+            transform: translateY(-1px);
+        }
+
+        .quiz-question {
+            font-size: 1.8em;
+            color: #764ba2;
+            margin: 30px 0;
+            font-weight: 900;
+            letter-spacing: 1px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .option-button {
+            background: #fff3cd;
+            color: #333;
+            border: 3px solid #ffc107;
+            padding: 15px 20px;
+            font-size: 1.1em;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fredoka', 'Noto Sans KR', sans-serif;
+            font-weight: 700;
+        }
+
+        .option-button:hover {
+            background: #ffc107;
+            transform: translateX(10px);
+        }
+
+        .answer-result {
+            font-size: 1.5em;
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 15px;
+            animation: slideIn 0.5s ease-out;
+            font-weight: 700;
+        }
+
+        .correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .funny-answer {
+            background: #e7d4f5;
+            color: #6f42c1;
+            border: 2px solid #764ba2;
+            font-size: 2em;
+            font-weight: 900;
+        }
+
+        .progress {
+            font-size: 1.2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        .emoji {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        p {
+            font-weight: 500;
+        }
+
+        .clickable-image {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .clickable-image:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 화면 1: 제목 -->
+        <div class="screen active" id="screen1">
+            <h1>🎓 선생님을 소개합니다 🎓</h1>
+            <div class="emoji">👨‍🏫</div>
+            <button class="button" onclick="nextScreen()">다음으로 →</button>
+        </div>
+
+        <!-- 화면 2: 이름 -->
+        <div class="screen" id="screen2">
+            <h2>선생님의 이름은?</h2>
+            <div class="name-display">정석훈</div>
+            <button class="button" onclick="nextScreen()">다음으로 →</button>
+        </div>
+
+        <!-- 화면 3: 소쿠리 사진 -->
+        <div class="screen" id="screen3">
+            <h2>선생님의 정체는...?</h2>
+            <div class="image-container">
+                <img src="sokuri.jpg" alt="소쿠리" onclick="nextScreen()" class="clickable-image">
+            </div>
+            <p style="font-size: 1.2em; color: #666; margin-top: 20px;">🧺 소쿠리 선생님입니다! 🧺</p>
+            <button class="button" onclick="nextScreen()">다음으로 →</button>
+        </div>
+
+        <!-- 화면 4: 취미 소개 -->
+        <div class="screen" id="screen4">
+            <h2>🎨 선생님의 취미를 소개하겠습니다!</h2>
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-150784272343-583f20270319?w=400" alt="책 읽기" onclick="showHobby()" class="clickable-image">
+            </div>
+            <div id="hobbyBox" style="display: none;">
+                <div class="hobby-text">
+                    선생님의 취미는 세계정복 입니다! 🌍
+                </div>
+            </div>
+            <button class="button" onclick="nextScreen()" id="nextBtn" style="display: none;">다음으로 →</button>
+        </div>
+
+        <!-- 화면 5: 과목 정의 -->
+        <div class="screen" id="screen5">
+            <h2>❓ 과목은 무엇일까요?</h2>
+            <button class="button" onclick="showDefinition()">정답 보기</button>
+            <div id="definitionBox" style="display: none;">
+                <div class="definition">
+                    가르치거나 배워야 할 지식 및 경험의 체계를 세분하여 계통을 세운 영역
+                </div>
+            </div>
+            <button class="button" onclick="nextScreen()" id="nextBtn2" style="display: none;">다음으로 →</button>
+        </div>
+
+        <!-- 화면 6: 퀴즈 1 -->
+        <div class="screen" id="screen6">
+            <div class="progress">📝 퀴즈 1/2</div>
+            <div class="quiz-question">선생님은 어떤 학생을 가장 좋아할까요?</div>
+            <div class="quiz-options">
+                <button class="option-button" onclick="checkAnswer(1, 1)">1번. 문제를 틀리는 학생</button>
+                <button class="option-button" onclick="checkAnswer(1, 2)">2번. 잘생긴 학생</button>
+                <button class="option-button" onclick="checkAnswer(1, 3)">3번. 열심히 하는 학생</button>
+                <button class="option-button" onclick="checkAnswer(1, 4)">4번. 똑똑한 학생</button>
+            </div>
+            <div id="answer1" style="display: none;"></div>
+        </div>
+
+        <!-- 화면 7: 퀴즈 2 -->
+        <div class="screen" id="screen7">
+            <div class="progress">📝 퀴즈 2/2</div>
+            <div class="quiz-question">선생님은 착할까요? 사악할까요?</div>
+            <div class="quiz-options">
+                <button class="option-button" onclick="checkAnswer(2, 1)">착합니다</button>
+                <button class="option-button" onclick="checkAnswer(2, 2)">사악합니다</button>
+                <button class="option-button" onclick="checkAnswer(2, 3)">모르겠습니다</button>
+            </div>
+            <div id="answer2" style="display: none;"></div>
+        </div>
+
+        <!-- 화면 8: 완료 -->
+        <div class="screen" id="screen8">
+            <h1>🎉 퀴즈 완료! 🎉</h1>
+            <div class="emoji">🌟</div>
+            <p style="font-size: 1.3em; color: #333; margin: 20px 0;">
+                모두 수고했어요!<br>이제 수업을 시작하겠습니다! 📚
+            </p>
+            <button class="button" onclick="resetQuiz()">처음부터 다시</button>
+        </div>
+    </div>
+
+    <script>
+        let currentScreen = 1;
+        const totalScreens = 8;
+
+        function nextScreen() {
+            document.getElementById(`screen${currentScreen}`).classList.remove('active');
+            currentScreen++;
+            if (currentScreen <= totalScreens) {
+                document.getElementById(`screen${currentScreen}`).classList.add('active');
+            }
+        }
+
+        function showHobby() {
+            document.getElementById('hobbyBox').style.display = 'block';
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function showDefinition() {
+            document.getElementById('definitionBox').style.display = 'block';
+            document.getElementById('nextBtn2').style.display = 'inline-block';
+        }
+
+        function checkAnswer(quizNum, selectedOption) {
+            const answerBox = document.getElementById(`answer${quizNum}`);
+            
+            if (quizNum === 1) {
+                if (selectedOption === 1) {
+                    answerBox.innerHTML = '<div class="answer-result correct">✅ 정답입니다!<br>문제를 틀리는 학생이 가장 좋습니다!<br>왜냐하면 배울 점이 많거든요! 📚</div>';
+                } else {
+                    answerBox.innerHTML = '<div class="answer-result incorrect">❌ 틀렸어요!<br>정답은 "문제를 틀리는 학생"입니다!</div>';
+                }
+            } else if (quizNum === 2) {
+                if (selectedOption === 2) {
+                    answerBox.innerHTML = '<div class="answer-result correct">✅ 정답입니다!<br>선생님은 사악합니다! 😈</div>';
+                } else {
+                    answerBox.innerHTML = '<div class="answer-result incorrect">❌ 틀렸어요!<br>정답은 "사악합니다"입니다!</div>';
+                }
+            }
+            
+            answerBox.style.display = 'block';
+            
+            // 다음 화면으로 가는 버튼 표시
+            setTimeout(() => {
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'button';
+                nextBtn.textContent = '다음으로 →';
+                nextBtn.onclick = nextScreen;
+                answerBox.appendChild(nextBtn);
+            }, 500);
+        }
+
+        function resetQuiz() {
+            currentScreen = 1;
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById('screen1').classList.add('active');
+            document.getElementById('hobbyBox').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('definitionBox').style.display = 'none';
+            document.getElementById('nextBtn2').style.display = 'none';
+            document.getElementById('answer1').style.display = 'none';
+            document.getElementById('answer2').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
